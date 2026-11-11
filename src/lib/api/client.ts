@@ -3,6 +3,21 @@ import type { ApiErrorBody } from '#lib/types/api'
 
 const API_URL = PUBLIC_API_URL.replace(/\/$/, '')
 
+export function getApiUrl(): string {
+  return API_URL
+}
+
+export async function checkApiHealth(): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_URL}/health`, {
+      signal: AbortSignal.timeout(3000),
+    })
+    return res.ok
+  } catch {
+    return false
+  }
+}
+
 export class ApiRequestError extends Error {
   readonly status: number
   readonly requestId: string | null
