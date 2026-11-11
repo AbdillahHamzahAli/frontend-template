@@ -1,4 +1,4 @@
-# myapp-web (Frontend Template)
+# Frontend Template
 
 Frontend standalone berbasis SvelteKit (Svelte 5) + Bun untuk companion `myapp-api`.
 Ini dirancang sebagai **starter/template independen**: tidak ada dependency monorepo,
