@@ -47,7 +47,7 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
 
   if (!response.ok) {
     const errorBody = body as ApiErrorBody | null
-    throw new ApiRequestError(errorBody?.error ?? `Request gagal (${response.status})`, {
+    throw new ApiRequestError(errorBody?.error ?? `Request failed (${response.status})`, {
       status: response.status,
       requestId,
       details: errorBody?.details,
@@ -62,7 +62,7 @@ export function getApiErrorMessage(error: unknown): string {
     const requestHint = error.requestId ? ` · ID: ${error.requestId}` : ''
     return `${formatErrorCode(error.message)}${requestHint}`
   }
-  return 'Terjadi kesalahan. Coba lagi dalam beberapa saat.'
+  return 'Something went wrong. Please try again in a moment.'
 }
 
 function formatErrorCode(code: string) {

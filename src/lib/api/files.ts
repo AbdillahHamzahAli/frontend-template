@@ -18,7 +18,7 @@ export async function uploadFile(file: File): Promise<StoredFile> {
   })
 
   if (!upload.ok) {
-    throw new Error(`Upload storage gagal (${upload.status})`)
+    throw new Error(`Storage upload failed (${upload.status})`)
   }
 
   return apiFetch<StoredFile>('/api/v1/files/confirm', {

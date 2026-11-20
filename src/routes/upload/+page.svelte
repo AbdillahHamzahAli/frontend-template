@@ -3,7 +3,6 @@
   import { uploadFile } from '#lib/api/files'
   import * as Alert from '#lib/components/ui/alert'
   import { Button } from '#lib/components/ui/button'
-  import * as Card from '#lib/components/ui/card'
   import type { StoredFile } from '#lib/types/file'
   import CircleCheck from '@lucide/svelte/icons/circle-check'
   import CloudUpload from '@lucide/svelte/icons/cloud-upload'
@@ -38,44 +37,33 @@
 
 <svelte:head><title>Upload — myapp</title></svelte:head>
 
-<section class="border-b pb-6">
-  <h1 class="text-3xl font-semibold tracking-tight">Upload file</h1>
-  <p class="text-muted-foreground">Upload langsung ke storage melalui presigned URL.</p>
-</section>
+<div class="mx-auto grid min-h-[calc(100svh-4rem)] max-w-xl content-center gap-4">
+  <label
+    class="flex cursor-pointer flex-col items-center gap-2 rounded-xl border border-dashed border-hairline bg-canvas-elevated p-8 text-center transition-colors hover:border-faint has-focus-visible:border-ring has-focus-visible:ring-3 has-focus-visible:ring-ring/50"
+  >
+    <CloudUpload class="size-8 text-mute" />
+    <input class="sr-only" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" onchange={choose} />
+    <strong class="max-w-full truncate text-sm leading-5 font-medium tracking-[-0.28px] text-ink">{selected ? selected.name : 'Click to choose a file'}</strong>
+    <span class="text-xs leading-4 text-mute">
+      {selected ? `${formatSize(selected.size)} · ${selected.type}` : 'PNG, JPEG, WebP, or PDF · up to 10 MB'}
+    </span>
+  </label>
 
-<Card.Root class="mx-auto mt-8 max-w-xl">
-  <Card.Header class="text-center">
-    <Card.Title>Pilih file untuk diunggah</Card.Title>
-    <Card.Description>PNG, JPEG, WebP, atau PDF · maksimal 10 MB</Card.Description>
-  </Card.Header>
-  <Card.Content class="grid gap-4">
-    <label
-      class="flex cursor-pointer flex-col items-center gap-2 rounded-lg border border-dashed p-8 text-center transition-colors hover:border-ring hover:bg-muted/50 has-focus-visible:border-ring has-focus-visible:ring-3 has-focus-visible:ring-ring/50"
-    >
-      <CloudUpload class="size-8 text-muted-foreground" />
-      <input class="sr-only" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" onchange={choose} />
-      <strong class="max-w-full truncate text-sm font-medium">{selected ? selected.name : 'Klik untuk memilih file'}</strong>
-      <span class="text-xs text-muted-foreground">
-        {selected ? `${formatSize(selected.size)} · ${selected.type}` : 'atau tarik file ke area ini'}
-      </span>
-    </label>
+  {#if error}
+    <Alert.Root variant="destructive">
+      <Alert.Description>{error}</Alert.Description>
+    </Alert.Root>
+  {/if}
 
-    {#if error}
-      <Alert.Root variant="destructive">
-        <Alert.Description>{error}</Alert.Description>
-      </Alert.Root>
-    {/if}
+  {#if uploaded}
+    <Alert.Root role="status">
+      <CircleCheck class="text-link" />
+      <Alert.Title>Upload complete.</Alert.Title>
+      <Alert.Description class="truncate font-mono text-xs text-body">{uploaded.key}</Alert.Description>
+    </Alert.Root>
+  {/if}
 
-    {#if uploaded}
-      <Alert.Root role="status">
-        <CircleCheck class="text-emerald-600" />
-        <Alert.Title>Upload berhasil.</Alert.Title>
-        <Alert.Description class="truncate font-mono text-xs">{uploaded.key}</Alert.Description>
-      </Alert.Root>
-    {/if}
-
-    <Button onclick={submit} disabled={!selected || uploading} class="w-full">
-      {uploading ? 'Mengunggah…' : 'Mulai upload'}
-    </Button>
-  </Card.Content>
-</Card.Root>
+  <Button onclick={submit} disabled={!selected || uploading} class="w-full">
+    {uploading ? 'Uploading…' : 'Start upload'}
+  </Button>
+</div>
